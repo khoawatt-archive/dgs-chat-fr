@@ -1,98 +1,104 @@
-import LoginButton from "@/components/LoginLogoutButton";
-import UserGreetText from "@/components/UserGreetText";
-import Image from "next/image";
+"use client"
+
+import { useState } from "react"
+import { Moon, Sun } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { LoginForm } from "./(auth)/login/components/LoginForm"
+import { SignUpForm } from "./(auth)/signup/components/SignUpForm"
+
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    document.documentElement.classList.toggle("dark")
+  }
+
+  // const handleLoginSuccess = () => {
+  //   setIsLoggedIn(true)
+  // }
+
+  // if (isLoggedIn) {
+  //   return <ChatLayout />
+  // }
+
   return (
-    // <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    //   <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-    //     <UserGreetText />
-    //     <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-    //       <LoginButton />
-    //     </div>
-    //   </div>
+    <div className={`min-h-screen flex flex-col ${darkMode ? "dark" : ""}`}>
+      {/* Header with dark mode toggle */}
+      <header className="w-full p-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold dark:text-white">Chat App</h1>
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </div>
+      </header>
 
-    //   <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-    //     <Image
-    //       className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-    //       src="/next.svg"
-    //       alt="Next.js Logo"
-    //       width={180}
-    //       height={37}
-    //       priority
-    //     />
-    //   </div>
+      {/* Main content */}
+      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 items-center bg-gray-50 dark:bg-gray-900">
+        {/* Left side - App info */}
+        <div className="w-full md:w-1/2 space-y-6">
+          <h2 className="text-3xl md:text-4xl font-bold dark:text-white">Connect and Chat in Real-Time</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            Our secure messaging platform lets you stay connected with friends, family, and colleagues from anywhere in
+            the world.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FeatureCard
+              title="Secure Messaging"
+              description="End-to-end encryption keeps your conversations private and secure."
+            />
+            <FeatureCard
+              title="Real-Time Chat"
+              description="Instant messaging with real-time delivery and read receipts."
+            />
+            <FeatureCard
+              title="File Sharing"
+              description="Easily share documents, photos, and videos with your contacts."
+            />
+            <FeatureCard title="Cross-Platform" description="Access your chats from any device, anywhere, anytime." />
+          </div>
+        </div>
 
-    //   <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-    //     <a
-    //       href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <h2 className="mb-3 text-2xl font-semibold">
-    //         Docs{" "}
-    //         <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-    //           -&gt;
-    //         </span>
-    //       </h2>
-    //       <p className="m-0 max-w-[30ch] text-sm opacity-50">
-    //         Find in-depth information about Next.js features and API.
-    //       </p>
-    //     </a>
+        {/* Right side - Auth forms */}
+        <div className="w-full md:w-1/2 max-w-md">
+          <Card className="p-6">
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              </TabsList>
+              <TabsContent value="login">
+                <LoginForm />
+              </TabsContent>
+              <TabsContent value="signup">
+                <SignUpForm />
+              </TabsContent>
+            </Tabs>
+          </Card>
+        </div>
+      </main>
 
-    //     <a
-    //       href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    //       className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <h2 className="mb-3 text-2xl font-semibold">
-    //         Learn{" "}
-    //         <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-    //           -&gt;
-    //         </span>
-    //       </h2>
-    //       <p className="m-0 max-w-[30ch] text-sm opacity-50">
-    //         Learn about Next.js in an interactive course with&nbsp;quizzes!
-    //       </p>
-    //     </a>
-
-    //     <a
-    //       href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <h2 className="mb-3 text-2xl font-semibold">
-    //         Templates{" "}
-    //         <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-    //           -&gt;
-    //         </span>
-    //       </h2>
-    //       <p className="m-0 max-w-[30ch] text-sm opacity-50">
-    //         Explore starter templates for Next.js.
-    //       </p>
-    //     </a>
-
-    //     <a
-    //       href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <h2 className="mb-3 text-2xl font-semibold">
-    //         Deploy{" "}
-    //         <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-    //           -&gt;
-    //         </span>
-    //       </h2>
-    //       <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-    //         Instantly deploy your Next.js site to a shareable URL with Vercel.
-    //       </p>
-    //     </a>
-    //   </div>
-    // </main>
-   <div> test </div>
-  );
+      {/* Footer */}
+      <footer className="w-full p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-center text-gray-500 dark:text-gray-400">
+        <div className="container mx-auto">
+          <p>© {new Date().getFullYear()} Chat App. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  )
 }
+
+function FeatureCard({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+      <h3 className="font-semibold mb-2 dark:text-white">{title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+    </div>
+  )
+}
+
